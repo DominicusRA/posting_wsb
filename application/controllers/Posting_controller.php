@@ -14,6 +14,7 @@ class Posting_controller extends CI_Controller
 			'bulan' => $this->input->post('bulan'),
 			'tahun' => $this->input->post('tahun')
 		);
+		$data['periode'] = $this->input->post('tahun') . str_pad($this->input->post('bulan'), 2, 0, STR_PAD_LEFT);
 
 		$result = $this->posting_m->posting($data);
 	}
