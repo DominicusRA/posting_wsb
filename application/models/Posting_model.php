@@ -29,6 +29,8 @@ class Posting_model extends CI_MODEL
             // echo "kzsjdfn";
         }
 
+
+        // STEP 1
         //ambil hasil postingan periode lalu, kemudian ubang jadi periode yang di minta STEP 1
 
         $query_t_piut = $this->db->query('create temporary table t_piut(
@@ -40,21 +42,29 @@ class Posting_model extends CI_MODEL
         echo $query_t_piut;
         //jika selesai membuat temporary table, maka di eksekusi query STEP 1
         if ($query_t_piut) {
+
             $insert_t_piut = $this->db->query("INSERT INTO t_piut (periode, nilai, nojnl) 
             SELECT (CASE WHEN periode = '" . $periode_sebelumnya . "' then '" . $periode . "' end) AS periode, (nilai-bayar) as nilai, nojnl
             from piut
             where periode like '%" . $periode_sebelumnya . "%'
             and (nilai - bayar) > 0");
 
+            // STEP 2
+            // ambil data baru dari minv
+            $insert_t_piutang_minv = $this->db->query("INSERT INTO t_piut (periode, nilai, nojnl)
+            SELECT concat(extract(YEAR FROM tf),extract(MONTH FROM tf)) AS periode, total, nf AS nojnl from minv where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . " ");
+        }
 
-            if ($insert_t_piut) {
-                $this->db->select('*');
-                $this->db->from('t_piut');
-                $result_step_1 = $this->db->get();
-                echo "<pre>";
-                print_r($result_step_1->result_array());
-                echo "</pre>";
-            }
+
+
+
+        if ($insert_t_piut && $insert_t_piutang_minv) {
+            $this->db->select('*');
+            $this->db->from('t_piut');
+            $result_step_1 = $this->db->get();
+            echo "<pre>";
+            print_r($result_step_1->result_array());
+            echo "</pre>";
         }
     }
 }
