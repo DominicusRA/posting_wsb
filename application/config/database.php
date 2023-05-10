@@ -79,6 +79,7 @@ $db['default'] = array(
 	'username' => 'postgres',
 	'password' => 'asd',
 	'database' => 'LOCAL_WSB',
+	// 'database' => 'trial-hd',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
