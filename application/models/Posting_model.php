@@ -39,6 +39,10 @@ class Posting_model extends CI_MODEL
             nojnl character varying,
             ket character varying
             )');
+        $query_t_dpiutang = $this->db->query('create temporary table t_dpiutang(
+            refno character varying,
+            bayar numeric
+            )');
 
         //jika selesai membuat temporary table, maka di eksekusi query STEP 1
         if ($query_t_piut) {
@@ -53,7 +57,7 @@ class Posting_model extends CI_MODEL
             // STEP 2
             // ambil data baru dari minv
             $insert_t_piutang_minv = $this->db->query("INSERT INTO t_piut (ket, periode, nilai, nojnl)
-            SELECT (CASE WHEN extract(YEAR FROM tf) = '2022' then 'minv' end) AS ket, concat(extract(YEAR FROM tf),extract(MONTH FROM tf)) AS periode, total, nf AS nojnl from minv where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . " ");
+            SELECT (CASE WHEN extract(YEAR FROM tf) = '2022' then 'minv' end) AS ket, concat(extract(YEAR FROM tf),extract(MONTH FROM tf)) AS periode, total as nilai , nf AS nojnl from minv where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . "");
             // STEP 3
             //ambil dp di tkpiut
             $insert_t_piutang_tkpiut = $this->db->query("INSERT INTO t_piut (ket, periode, nilai, nojnl)
@@ -61,36 +65,73 @@ class Posting_model extends CI_MODEL
             // STEP 4
             // ambil returan di mrj
             $insert_t_piutang_mrj = $this->db->query("INSERT INTO t_piut (ket, periode, nilai, nojnl)
-            SELECT (CASE WHEN extract(YEAR FROM tf) = '2022' then 'mrj' end) as ket, concat(extract(YEAR FROM tf),extract(MONTH FROM tf)) AS periode, total AS nilai, nf AS nojnl from mrj where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . " group by ket, periode, nilai, nojnl");
+            SELECT (CASE WHEN extract(YEAR FROM tf) = '2022' then 'mrj' end) as ket, concat(extract(YEAR FROM tf),extract(MONTH FROM tf)) AS periode, total AS nilai, nf AS nojnl from mrj where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . "");
             // STEP 5
-            //ambil pembayaran di dpiutang
-            // $insert_t_piutang_dpiutang = $this->db->query();
+            //ambil pembayaran di dpiutang masukan ke twmporary table t_dpiutang
+
+            $insert_t_dpiutang_dpiutang = $this->db->query("INSERT INTO t_dpiutang (refno, bayar)
+            SELECT refno, sum(bayar) AS bayar FROM dpiutang WHERE extract(YEAR FROM tf) = " . $data['range']['tahun'] . " AND extract(MONTH FROM tf) =  " . $data['range']['bulan'] . " GROUP BY refno ");
         }
 
 
 
 
-        if ($insert_t_piut && $insert_t_piutang_minv && $insert_t_piutang_tkpiut && $insert_t_piutang_mrj) {
-            $this->db->select('*');
-            $this->db->from('t_piut');
-            $this->db->order_by('nojnl', 'ASC');
-            // $this->db->group_by('nojnl, nilai, periode');
-            $result_step_1 = $this->db->get();
-            echo "<pre>";
-            print_r($result_step_1->result_array());
-            echo "</pre>";
-        }
-        echo "BATASAN TEST <br>";
-        echo "BATASAN TEST <br>";
-        echo "BATASAN TEST <br>";
-        $this->db->select('*');
-        $this->db->from('piut');
-        $this->db->join('t_piut', 't_piut.nojnl = piut.nojnl', 'left');
-        $this->db->where('piut.periode', $periode);
-        $this->db->order_by('t_piut.ket', 'ASC');
-        $result_test = $this->db->get();
+        // if ($insert_t_piut && $insert_t_piutang_minv && $insert_t_piutang_tkpiut && $insert_t_piutang_mrj) {
+        //     $this->db->select('*');
+        //     $this->db->from('t_piut');
+        //     $this->db->order_by('nojnl', 'ASC');
+        //     // $this->db->group_by('nojnl, nilai, periode');
+        //     $result_step_1 = $this->db->get();
+        //     echo "<pre>";
+        //     print_r($result_step_1->result_array());
+        //     echo "</pre>";
+        // }
+        // echo "BATASAN TEST <br>";
+        // echo "BATASAN TEST <br>";
+        // echo "BATASAN TEST <br>";
+        // $this->db->select('*');
+        // $this->db->from('piut');
+        // $this->db->join('t_piut', 't_piut.nojnl = piut.nojnl', 'left');
+        // $this->db->where('piut.periode', $periode);
+        // $this->db->order_by('t_piut.ket', 'ASC');
+        // $result_test = $this->db->get();
+        // echo "<pre>";
+        // print_r($result_test->result_array());
+        // echo "</pre>";
+
+        // echo "BATASAN TEST PIUTANG <br>";
+        // echo "BATASAN TEST PIUTANG <br>";
+        // echo "BATASAN TEST PIUTANG <br>";
+        // $this->db->select('dpiutang.nf, dpiutang.refno, dpiutang.bayar, t_piut.periode, t_piut.nilai, t_piut.nojnl, t_piut.ket');
+        // $this->db->from('dpiutang');
+        // $this->db->join('t_piut', 't_piut.nojnl = dpiutang.refno', 'right');
+        // $this->db->group_by('dpiutang.nf, dpiutang.refno, dpiutang.bayar, t_piut.periode, t_piut.nilai, t_piut.nojnl, t_piut.ket');
+        // $this->db->order_by('dpiutang.nf', 'asd');
+        // // $this->db->order_by('dpiutang.bayar', 'asd');
+        // $result_test_1 = $this->db->get();
+
+        // echo "<pre>";
+        // print_r($result_test_1->result_array());
+        // echo "</pre>";
+
+
+        // $this->db->select('*');
+        // $this->db->from('t_dpiutang');
+        // $result_t_dpiutang = $this->db->get();
+        // echo "<pre>";
+        // print_r($result_t_dpiutang->result_array());
+        // echo "</pre>";
+
+        // echo "INI BATASAN UNTUK TEST";
+
+
+
+        $this->db->select('nojnl, nilai, (CASE WHEN bayar is NULL THEN 0 ELSE bayar END) AS bayar, periode');
+        $this->db->from('t_dpiutang');
+        $this->db->join('t_piut', 't_piut.nojnl = t_dpiutang.refno', 'right');
+        $result_t_dpiutang = $this->db->get();
         echo "<pre>";
-        print_r($result_test->result_array());
+        print_r($result_t_dpiutang->result_array());
         echo "</pre>";
     }
 }
