@@ -8,6 +8,10 @@ class Posting_controller extends CI_Controller
 		parent::__construct();
 		$this->load->model('posting_model', 'posting_m');
 	}
+	public function index()
+	{
+		$this->load->view('proses/posting/index.php');
+	}
 	public function piutang()
 	{
 		$data['range'] = array(
