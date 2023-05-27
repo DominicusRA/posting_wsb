@@ -64,7 +64,7 @@ class Posting_model extends CI_MODEL
             // STEP 2
             // ambil data baru dari minv
             $insert_t_piutang_minv = $this->db->query("INSERT INTO t_piut (acc, type, periode, nilai, nojnl, kode, tgl, tjt, kodesls )
-            SELECT (CASE WHEN 0 = 0 then '114.100' end) AS acc, (CASE WHEN 0 = 0 then 'FAKTUR' end) AS type, concat(extract(YEAR FROM tf),to_char(tf,'MM')) AS periode, total as nilai , nf AS nojnl , kode, tf as tgl, tjt, slskode from minv where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . "");
+            SELECT (CASE WHEN 0 = 0 then '114.100' end) AS acc, (CASE WHEN 0 = 0 then 'FAKTUR' end) AS type, concat(    ,to_char(tf,'MM')) AS periode, total as nilai , nf AS nojnl , kode, tf as tgl, tjt, slskode from minv where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . "");
             // STEP 3
             //ambil dp di tkpiut
             $insert_t_piutang_tkpiut = $this->db->query("INSERT INTO t_piut (acc, type, periode, nilai, nojnl, kode, tgl, tjt )
@@ -145,5 +145,7 @@ class Posting_model extends CI_MODEL
             SELECT nojnl, acc, kode, tgl, tjt, type, nilai, (CASE WHEN bayar is NULL THEN 0 ELSE bayar END) AS bayar, ket, fgroup, kodesls, periode 
             from t_dpiutang
             RIGHT JOIN t_piut on t_piut.nojnl = t_dpiutang.refno");
+
+        return true;
     }
 }
