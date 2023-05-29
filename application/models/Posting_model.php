@@ -3,15 +3,15 @@ class Posting_model extends CI_MODEL
 {
     function posting($data)
     {
-        // print_r($data);
+        // while(){
+
+        // }
         if ($data['range']['bulan'] - 1 == 0) {
             $periode_sebelumnya = $data['range']['tahun'] - 1 . 12;
         } else {
             $periode_sebelumnya = $data['range']['tahun'] . str_pad($data['range']['bulan'] - 1, 2, 0, STR_PAD_LEFT);
         }
         $periode = $data['periode'];
-
-        echo $periode_sebelumnya;
         // cek apakah sudah ada yang di posting
         // jika ada data yang bersangkutan dengan periode posting di hapus
         $this->db->select();
@@ -21,12 +21,10 @@ class Posting_model extends CI_MODEL
         // print_r($count_periode);
 
         if ($count_periode > 0) {
-            echo "ini berjalan";
+
             if ($this->db->delete('piut', array('periode' => $data['periode']))) {
-                echo "hapus data berhasil";
             }
         } else {
-            // echo "kzsjdfn";
         }
 
 
@@ -64,7 +62,7 @@ class Posting_model extends CI_MODEL
             // STEP 2
             // ambil data baru dari minv
             $insert_t_piutang_minv = $this->db->query("INSERT INTO t_piut (acc, type, periode, nilai, nojnl, kode, tgl, tjt, kodesls )
-            SELECT (CASE WHEN 0 = 0 then '114.100' end) AS acc, (CASE WHEN 0 = 0 then 'FAKTUR' end) AS type, concat(    ,to_char(tf,'MM')) AS periode, total as nilai , nf AS nojnl , kode, tf as tgl, tjt, slskode from minv where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . "");
+            SELECT (CASE WHEN 0 = 0 then '114.100' end) AS acc, (CASE WHEN 0 = 0 then 'FAKTUR' end) AS type, concat(extract(YEAR FROM tf),to_char(tf,'MM')) AS periode, total as nilai , nf AS nojnl , kode, tf as tgl, tjt, slskode from minv where extract(YEAR FROM tf) = " . $data['range']['tahun'] . " and extract(MONTH FROM tf) =  " . $data['range']['bulan'] . "");
             // STEP 3
             //ambil dp di tkpiut
             $insert_t_piutang_tkpiut = $this->db->query("INSERT INTO t_piut (acc, type, periode, nilai, nojnl, kode, tgl, tjt )
@@ -137,9 +135,9 @@ class Posting_model extends CI_MODEL
         $this->db->from('t_dpiutang');
         $this->db->join('t_piut', 't_piut.nojnl = t_dpiutang.refno', 'right');
         $result_t_dpiutang = $this->db->get();
-        echo "<pre>";
-        print_r($result_t_dpiutang->result_array());
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($result_t_dpiutang->result_array());
+        // echo "</pre>";
 
         $insert_piut = $this->db->query("INSERT INTO piut (nojnl, acc, kode, tgl, tjt, type, nilai, bayar, ket, fgroup, kodesls, periode)
             SELECT nojnl, acc, kode, tgl, tjt, type, nilai, (CASE WHEN bayar is NULL THEN 0 ELSE bayar END) AS bayar, ket, fgroup, kodesls, periode 
