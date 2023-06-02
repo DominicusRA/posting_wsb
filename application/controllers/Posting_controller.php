@@ -14,6 +14,7 @@ class Posting_controller extends CI_Controller
 	}
 	public function piutang()
 	{
+		$data['i_periode'] = $this->input->post('periode');
 		$data['jenis'] = $this->input->post('jenis');
 		$data['range'] = array(
 			'bulan' => $this->input->post('bulan'),
@@ -28,7 +29,7 @@ class Posting_controller extends CI_Controller
 		$response = array(
 			'status' => 'success',
 			'message' => 'Data berhasil diambil',
-			'data' => $data
+			'data' => $result
 		);
 		$this->output->set_content_type('application/json');
 		$this->output->set_output(json_encode($response));

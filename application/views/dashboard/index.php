@@ -113,7 +113,7 @@ $this->load->view('addition/head.php');
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="hutang" id="jenis_posting[]" name="jenis_posting[]" disabled>
+                                                <input class="form-check-input" type="checkbox" value="hutang" id="jenis_posting[]" name="jenis_posting[]">
                                                 <label class="form-check-label" for="jenis_posting">
                                                     Hutang
                                                 </label>
@@ -135,6 +135,14 @@ $this->load->view('addition/head.php');
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Tahun</label>
                                 <input type="number" class="form-control" id="tahun" min="1" max="<?= date('Y') ?>" name="tahun">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Periode</label>
+                                <input type="month" class="form-control" id="periode" name="periode">
                             </div>
                         </div>
                     </div>
@@ -168,10 +176,13 @@ $this->load->view('addition/head.php');
                     </div>
                     <div class="row my-2">
                         <div class="col d-flex justify-content-center h5">
-                            100 % Selesai
+                            -100 % Selesai-
 
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-primary">OK</button>
                 </div>
             </div>
         </div>
@@ -223,6 +234,7 @@ $this->load->view('addition/head.php');
             const jenis = []
             var bulan = $('#bulan').val();
             var tahun = $('#tahun').val();
+            var periode = $('#periode').val();
             var jenis_posting = document.getElementsByName('jenis_posting[]');
             for (i = 0; i < jenis_posting.length; i++) {
                 if (jenis_posting[i].checked) {
@@ -238,11 +250,14 @@ $this->load->view('addition/head.php');
                 data: {
                     bulan: bulan,
                     tahun: tahun,
-                    jenis: jenis
+                    jenis: jenis,
+                    periode: periode
                 },
                 xhr: function() {
                     var xhr = new window.XMLHttpRequest();
                     // Memonitor kemajuan permintaan AJAX
+                    // xhr.onprogress.add
+                    console.log(xhr);
                     xhr.upload.addEventListener("progress", function(evt) {
                         if (evt.lengthComputable) {
                             var percentComplete = (evt.loaded / evt.total) * 100;
