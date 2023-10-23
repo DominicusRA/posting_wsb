@@ -101,7 +101,7 @@ $this->load->view('addition/head.php');
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="piutang" id="jenis_posting[]" name="jenis_posting[]" disabled>
+                                                <input class="form-check-input" type="checkbox" value="semua" id="jenis_posting[]" name="jenis_posting[]" disabled>
                                                 <label class="form-check-label" for="jenis_posting">
                                                     Semua
                                                 </label>
@@ -124,7 +124,7 @@ $this->load->view('addition/head.php');
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Bulan</label>
@@ -137,7 +137,7 @@ $this->load->view('addition/head.php');
                                 <input type="number" class="form-control" id="tahun" min="1" max="<?= date('Y') ?>" name="tahun">
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row">
                         <div class="col">
                             <div class="form-group">

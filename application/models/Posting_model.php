@@ -176,23 +176,16 @@ class Posting_model extends CI_MODEL
                         $tahun = $tanggal_cek->format('Y');
                         $bulan = $tanggal_cek->format('m');
                     }
-                    // echo $tanggal_cek;
-
-
-
-                    // while(){
-
-                    // }
-
-
-
-                    return true;
+                    $data['message'] = "masuk ke posting piutang";
+                    return $data;
                     break;
                 case 'hutang':
-                    echo "halooo ini masuk ke hutang";
+                    $data['message'] = "masuk ke posting hutang";
+                    return $data;
                     break;
                 default:
-                    return false;
+                    $data['message'] = "masuk ke posting lain";
+                    return $data;
             }
         }
     }

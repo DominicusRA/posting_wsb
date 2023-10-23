@@ -14,13 +14,25 @@ class Posting_controller extends CI_Controller
 	}
 	public function piutang()
 	{
-		$data['i_periode'] = $this->input->post('periode');
+
+		if ($this->input->post('periode') != "") {
+			$data['i_periode'] = $this->input->post('periode');
+			$periode = $this->input->post('periode');
+			$data['ex_per'] = explode("-", $periode);
+			$data['range'] = array(
+				'tahun' => $data['ex_per'][0],
+				'bulan' => $data['ex_per'][1],
+			);
+		} else {
+			$data['range'] = array(
+				'tahun' => $this->input->post('tahun'),
+				'bulan' => $this->input->post('bulan'),
+			);
+		}
 		$data['jenis'] = $this->input->post('jenis');
-		$data['range'] = array(
-			'bulan' => $this->input->post('bulan'),
-			'tahun' => $this->input->post('tahun')
-		);
-		$data['periode'] = $this->input->post('tahun') . str_pad($this->input->post('bulan'), 2, 0, STR_PAD_LEFT);
+
+		// $data['periode'] = $this->input->post('tahun') . str_pad($this->input->post('bulan'), 2, 0, STR_PAD_LEFT);
+		$data['periode'] = $data['range']['tahun'] . str_pad($data['range']['bulan'], 2, 0, STR_PAD_LEFT);
 
 		$result = $this->posting_m->posting($data);
 		// return $result;

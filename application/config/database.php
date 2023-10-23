@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'postgres',
-	'password' => 'asd',
-	'database' => 'LOCAL_WSB',
+	'hostname' => '222.222.222.6',
+	'username' => 'saya',
+	'password' => 'akujaya',
+	'database' => 'coba_cms',
 	// 'database' => 'trial-hd',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
